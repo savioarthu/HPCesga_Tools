@@ -1,0 +1,27 @@
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -O0 -o dgesv dgesv.c
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -O1 -o dgesv1 dgesv.c
+
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -O2 -march=native -o dgesv2 dgesv.c
+
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -O3 -march=native -o dgesv3 dgesv.c
+
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -Ofast -march=native -o dgesvfast dgesv.c
+
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -Ofast -xcore-avx2 -ipo -march=native -o dgesvipo dgesv.c
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -Ofast -xcore-avx2 -ipo -prof-gen -march=native -o dgesvpgo dgesv.c
+
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -Ofast -xcore-avx2 -ipo -use-gen -march=native -o dgesv dgesv.c
+
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -qopt-report5 –qopt-report-phase=vec -O3 -o dgesvvect dgesv.c
+
+
+	icc -lmkl -lmkl_core -lmkl_intel_lp64 -lmkl_sequential -qopenmp -parallel -o dgesvpara dgesv.c
+
