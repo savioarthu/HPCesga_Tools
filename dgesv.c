@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "mkl_lapacke.h"
+//#include "mkl_lapacke.h"
 
 // Generate random matrix
 double *generate_matrix(int size)
@@ -101,17 +101,20 @@ double* Transposed(int n, double* Mat){
 double* ProdMat(int n, double* Mat1, double* Mat2)
 {
     int i,j,k; // Loop variables
+    double sum;
     double* res = (double *)malloc(sizeof(double) * n * n); // Result matrix
 
     // Calculate product
     for (i = 0; i < n; i++) {
         for (j = 0; j<n ; j++) {
-            res[i*n+j] = 0;
+            sum = 0.0;
             for(k=0; k<n ; k++) {
-                res[i*n+j]+= Mat1[i*n+k]*Mat2[k*n+j];
+                sum += Mat1[i*n+k]*Mat2[k*n+j];
             }
+            res[i*n+j] = sum;
         }
     }
+
     // We return the final product
     return res;
 }
@@ -215,36 +218,36 @@ double* my_dgesv(int n, double *a, double *b) {
         int size = atoi(argv[1]);
 
         // Init
-        double *a, *aref;
-        double *b, *bref;
+        double *a; // *aref;
+        double *b; // *bref;
 
         // Creation of A
         a = generate_matrix(size);
-        aref = generate_matrix(size);
+        //aref = generate_matrix(size);
         //print_matrix("A", a, size);
 
         // Creation of B
         b = generate_matrix(size);
-        bref = generate_matrix(size);
+        //bref = generate_matrix(size);
         //print_matrix("B", b, size);
 
         // Using MKL to solve the system
-        MKL_INT n = size, nrhs = size, lda = size, ldb = size, info;
-        MKL_INT *ipiv = (MKL_INT *)malloc(sizeof(MKL_INT)*size);
+        //MKL_INT n = size, nrhs = size, lda = size, ldb = size, info;
+        //MKL_INT *ipiv = (MKL_INT *)malloc(sizeof(MKL_INT)*size);
 
         clock_t tStart = clock();
-        info = LAPACKE_dgesv(LAPACK_ROW_MAJOR, n, nrhs, aref, lda, ipiv, bref, ldb);
-        printf("Time taken by MKL: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
+        //info = LAPACKE_dgesv(LAPACK_ROW_MAJOR, n, nrhs, aref, lda, ipiv, bref, ldb);
+        //printf("Time taken by MKL: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
 
-        tStart = clock();
+        //tStart = clock();
         double* X;
         X = my_dgesv(size, a, b);
         printf("Time taken by my implementation: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
         
-        if (check_result(bref,X,size)==1)
-            printf("Result is ok!\n");
-        else    
-            printf("Result is wrong!\n");
+        //if (check_result(bref,X,size)==1)
+        //    printf("Result is ok!\n");
+        //else    
+        //    printf("Result is wrong!\n");
         
         //print_matrix("X", X, size);
         //print_matrix("Xref", bref, size);
@@ -252,8 +255,8 @@ double* my_dgesv(int n, double *a, double *b) {
         // We free up the space allocated by the matrices
         free(a);
         free(b);
-        free(aref);
-        free(bref);
+        //free(aref);
+        //free(bref);
         free(X);
         return 0;
     }
